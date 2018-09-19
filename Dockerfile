@@ -57,6 +57,14 @@ RUN \
             /app \
             /config \
             /defaults \
+        && chown docker:docker \
+            /app \
+            /config \
+            /defaults \
+        && chmod -Rf a+rw \
+            /app \
+            /config \
+            /defaults \
     && \
     echo "**** cleanup ****" && \
         rm -rf /tmp/* \
