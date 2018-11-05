@@ -42,5 +42,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+/root/var/cache/oracle-jdk7-installer/*.tar.gz
+
 # Notes on project
 NOTES

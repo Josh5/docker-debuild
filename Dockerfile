@@ -1,14 +1,24 @@
-FROM josh5/ubuntu-oracle-java7-jdk
+FROM ubuntu:16.04
 LABEL maintainer="Josh.5 <jsunnex@gmail.com>"
+
+
+ARG ORACLE_INSTALLER_URL="https://launchpad.net/~webupd8team/+archive/ubuntu/java/+build/7520848/+files/oracle-java7-installer_7u80+7u60arm-0~webupd8~1_all.deb"
+
+
+# Add local files
+COPY root/ /
 
 
 # Install
 RUN \
     echo "**** install base packages ****" \
         && apt-get update \
+        && apt-get install -y --no-install-recommends \
+            software-properties-common \
         && apt-get install -y \
             ant \
             apt-utils \
+            bash-completion \
             binutils \
             build-essential \
             bzip2 \
@@ -20,15 +30,24 @@ RUN \
             htop \
             imagemagick \
             iputils-ping \
+            java-common \
             language-pack-en-base \
             libfontconfig \
             libstring-shellquote-perl \
+            locales \
             mercurial \
             nano \
+            openssh-server \
             openssl \
             rsyslog \
             software-properties-common \
+            unzip \
             wget \
+    && \
+    echo "**** install java 7 ****" \
+        && wget -q --show-progress -O "/tmp/oracle-java7-installer.deb" ${ORACLE_INSTALLER_URL} \
+        && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
+        && dpkg -i /tmp/oracle-java7-installer.deb \
     && \
     echo "**** install php packages ****" \
         && apt-get install -y \
@@ -52,6 +71,11 @@ RUN \
         && apt-get install -y \
             devscripts \
             rpm \
+    && \
+    echo "**** Install RequireJS ****" \
+        && apt-get install -y \
+            npm \
+        && npm install -g requirejs \
     && \
     echo "**** cleanup ****" \
         && apt-get clean \
