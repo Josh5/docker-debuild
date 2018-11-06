@@ -3,6 +3,7 @@ LABEL maintainer="Josh.5 <jsunnex@gmail.com>"
 
 
 ARG ORACLE_INSTALLER_URL="https://launchpad.net/~webupd8team/+archive/ubuntu/java/+build/7520848/+files/oracle-java7-installer_7u80+7u60arm-0~webupd8~1_all.deb"
+ARG CLOSURE_COMPILER_URL="https://dl.google.com/closure-compiler/compiler-20131014.tar.gz"
 
 
 # Add local files
@@ -72,14 +73,23 @@ RUN \
             devscripts \
             rpm \
     && \
-    echo "**** Install RequireJS ****" \
+    echo "**** install requirejs ****" \
         && apt-get install -y \
             npm \
         && npm install -g requirejs \
     && \
+    echo "**** install closure compiler ****" \
+        && mkdir -p /opt/closure-compiler \
+        && curl -L -o /tmp/closure-compiler.tar.gz ${CLOSURE_COMPILER_URL} \
+        && tar zxfp "/tmp/closure-compiler.tar.gz" -C /opt/closure-compiler \
+        && chmod a+rw /opt/closure-compiler/* \
+    && \
     echo "**** cleanup ****" \
         && apt-get clean \
         && rm -rf /tmp/* \
+        && rm -rf /var/tmp/* \
+        && rm -rf /var/tmp/* \
+        && rm -rf /var/cache/oracle-jdk7-installer/* \
         && rm -rf /var/lib/apt/lists/*
 
 
